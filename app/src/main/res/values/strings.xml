@@ -1,0 +1,9 @@
+<resources>
+  <string name="app_name">VyngTestApp</string>
+
+  <string name="search_title">Search</string>
+  <string name="search_placeholder">Start typing the query</string>
+  <string name="search_empty">Nothing was found</string>
+
+  <string name="player_title">Player</string>
+</resources>
