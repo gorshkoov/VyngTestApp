@@ -88,6 +88,8 @@ public class VideoListController extends BaseController implements VideoListView
   public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.video_list_menu, menu);
+    MenuItem searchMenuItem = menu.findItem(R.id.search_menu_item);
+    searchMenuItem.expandActionView();
   }
 
   @Override
