@@ -12,11 +12,11 @@ public class VideoListPresenter extends BasePresenter<VideoListView> {
     this.interactor = interactor;
   }
 
-  public void searchStarted(String query) {
+  public void searchStarted(String query, int page) {
     addSubscription(
-        interactor.search(query)
+        interactor.search(query, page)
             .doOnSubscribe(disposable -> getView().setLoading(true))
             .doFinally(() -> getView().setLoading(false))
-            .subscribe(items -> getView().onItemsLoaded(items), Throwable::printStackTrace));
+            .subscribe(items -> getView().onItemsLoaded(items, page), Throwable::printStackTrace));
   }
 }

@@ -6,7 +6,7 @@ import ru.app.rz0.vyngtestapp.models.search.VideoItem;
 
 public interface VideoListView extends BaseView {
 
-  void onItemsLoaded(List<VideoItem> items);
+  void onItemsLoaded(List<VideoItem> items, int page);
 
   void setLoading(boolean loading);
 }

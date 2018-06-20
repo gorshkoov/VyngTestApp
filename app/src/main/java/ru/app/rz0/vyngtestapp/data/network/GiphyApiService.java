@@ -9,5 +9,5 @@ public interface GiphyApiService {
 
   @GET("v1/gifs/search")
   Single<GiphySearchResponse> search(@Query("api_key") String key, @Query("q") String query,
-      @Query("limit") int limit);
+      @Query("limit") int limit, @Query("offset") int offset);
 }

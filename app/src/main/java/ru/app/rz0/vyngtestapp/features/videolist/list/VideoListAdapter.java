@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import java.util.ArrayList;
 import java.util.List;
 import ru.app.rz0.vyngtestapp.R;
 import ru.app.rz0.vyngtestapp.models.search.VideoItem;
@@ -53,6 +54,16 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListHolder> {
 
     this.items.clear();
     this.items.addAll(items);
+    result.dispatchUpdatesTo(this);
+  }
+
+  public void addToList(List<VideoItem> items) {
+    List<VideoItem> newItems = new ArrayList<>(this.items);
+    newItems.addAll(items);
+    DiffUtil.DiffResult result = DiffUtil.calculateDiff(new VideoDiffCallback(this.items, newItems));
+
+    this.items.clear();
+    this.items.addAll(newItems);
     result.dispatchUpdatesTo(this);
   }
 }

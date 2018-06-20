@@ -14,8 +14,8 @@ public class VideoListInteractor {
     this.repository = repository;
   }
 
-  public Single<List<VideoItem>> search(String query) {
-    return repository.search(query);
+  public Single<List<VideoItem>> search(String query, int page) {
+    return repository.search(query, page);
   }
 
 }
