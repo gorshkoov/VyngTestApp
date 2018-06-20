@@ -21,8 +21,8 @@ public class VideoListRepositoryImpl implements VideoListRepository {
   }
 
   @Override
-  public Single<List<VideoItem>> search(String query) {
-    return service.search(Const.GIPHY_KEY, query, Const.GIPHY_LIMIT)
+  public Single<List<VideoItem>> search(String query, int page) {
+    return service.search(Const.GIPHY_KEY, query, Const.GIPHY_LIMIT, page * Const.GIPHY_LIMIT)
         .observeOn(schedulers.ui())
         .subscribeOn(schedulers.io())
         .map(response -> response.items);

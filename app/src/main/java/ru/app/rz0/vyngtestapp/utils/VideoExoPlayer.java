@@ -5,6 +5,7 @@ import android.net.Uri;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.LoopingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -43,7 +44,9 @@ public class VideoExoPlayer {
     MediaSource mediaSource = new ExtractorMediaSource.Factory(factory)
         .createMediaSource(Uri.parse(url), null, null);
 
-    exoPlayer.prepare(mediaSource);
+    LoopingMediaSource loopingMediaSource = new LoopingMediaSource(mediaSource);
+
+    exoPlayer.prepare(loopingMediaSource);
   }
 
   public void detach() {

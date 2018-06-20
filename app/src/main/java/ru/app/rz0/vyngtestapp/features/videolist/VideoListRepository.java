@@ -6,6 +6,6 @@ import ru.app.rz0.vyngtestapp.models.search.VideoItem;
 
 public interface VideoListRepository {
 
-  Single<List<VideoItem>> search(String query);
+  Single<List<VideoItem>> search(String query, int page);
 
 }

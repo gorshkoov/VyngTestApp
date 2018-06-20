@@ -3,8 +3,10 @@ package ru.app.rz0.vyngtestapp.features.videolist;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +27,7 @@ import ru.app.rz0.vyngtestapp.base.presentation.BaseController;
 import ru.app.rz0.vyngtestapp.di.videolist.VideoListComponent;
 import ru.app.rz0.vyngtestapp.di.videolist.VideoListModule;
 import ru.app.rz0.vyngtestapp.features.player.PlayerController;
+import ru.app.rz0.vyngtestapp.features.videolist.list.PaginationScrollListener;
 import ru.app.rz0.vyngtestapp.features.videolist.list.VideoListAdapter;
 import ru.app.rz0.vyngtestapp.models.search.VideoItem;
 import ru.app.rz0.vyngtestapp.utils.GlideLoader;
@@ -44,10 +47,20 @@ public class VideoListController extends BaseController implements VideoListView
   VideoListPresenter presenter;
 
   private CompositeDisposable compositeDisposable;
+  private String searchQuery;
 
   @Override
   protected void onViewBound(@NonNull View view) {
-    recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+    LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+    recyclerView.setLayoutManager(layoutManager);
+    recyclerView.addOnScrollListener(new PaginationScrollListener(layoutManager) {
+      @Override
+      public void onLoadMore(int currentPage) {
+        Log.d("LOAD_MORE ", " " + currentPage);
+        search(currentPage);
+      }
+    });
+
     setHasOptionsMenu(true);
     provideComponent();
   }
@@ -101,13 +114,20 @@ public class VideoListController extends BaseController implements VideoListView
             .observeOn(AndroidSchedulers.mainThread())
             .filter(query -> !TextUtils.isEmpty(query))
             .map(CharSequence::toString)
-            .subscribe(presenter::searchStarted));
+            .subscribe(query -> {
+              searchQuery = query;
+              search(0);
+            }));
 
     super.onPrepareOptionsMenu(menu);
   }
 
+  private void search(int page) {
+    presenter.searchStarted(searchQuery, page);
+  }
+
   @Override
-  public void onItemsLoaded(List<VideoItem> items) {
+  public void onItemsLoaded(List<VideoItem> items, int page) {
     if (items.size() == 0) {
       showPlaceholder(true);
       return;
@@ -117,7 +137,12 @@ public class VideoListController extends BaseController implements VideoListView
       recyclerView.setAdapter(new VideoListAdapter(getActivity(), items, new GlideLoader(),
           view -> openVideoPlayController((VideoItem) view.getTag(R.id.tag_object))));
     } else {
-      ((VideoListAdapter) recyclerView.getAdapter()).updateList(items);
+      VideoListAdapter videoListAdapter = (VideoListAdapter) recyclerView.getAdapter();
+      if (page == 0) {
+        videoListAdapter.updateList(items);
+      } else {
+        videoListAdapter.addToList(items);
+      }
     }
   }
 
